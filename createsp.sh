@@ -10,7 +10,16 @@ servicePrincipalName=$2
 servicePrincipalIdUri='http://$2'
 servicePrincipalPwd=$3
 
+echo '----------------------------------------'
+echo 'Running with parameters:'
+echo 'subscription = $subscriptionName'
+echo 'servicePrincipalName = $servicePrincipalName'
+echo 'servicePrincipalIdUri = $servicePrincipalIdUri'
+echo '----------------------------------------'
+
+
 # Login and select the subscription
+echo ''
 echo '----------------------------------------'
 echo 'Logging into Azure...'
 echo '----------------------------------------'
