@@ -52,10 +52,11 @@ azure ad app create --name "$servicePrincipalName" \
 
 if [ $? = "0" ]; then
 
+    echo ''
     echo 'Getting the created appId...'
     createdAppId=$(azure ad app show --identifierUri "$servicePrincipalIdUri" --json | jq --raw-output '.[0].appId')
 
-    if [ $? = "0"]; then
+    if [ $? = "0" ]; then
 
         echo 'Creating a Service Principal on the App...'
         azure ad sp create $createdAppId
