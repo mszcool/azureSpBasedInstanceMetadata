@@ -10,12 +10,13 @@ servicePrincipalName=$2
 servicePrincipalIdUri='http://'$2
 servicePrincipalPwd=$3
 
+echo ''
 echo '----------------------------------------'
 echo 'Running with parameters:'
+echo '----------------------------------------'
 echo 'subscription = ' $subscriptionName
 echo 'servicePrincipalName = ' $servicePrincipalName
 echo 'servicePrincipalIdUri = ' $servicePrincipalIdUri
-echo '----------------------------------------'
 
 
 # Login and select the subscription
@@ -45,6 +46,7 @@ echo '----------------------------------------'
 echo 'Creating service principal'
 echo '----------------------------------------'
 
+echo ''
 echo 'Creating the app...'
 
 azure ad app create --name "$servicePrincipalName" \
@@ -63,17 +65,20 @@ if [ $? = "0" ]; then
 
     if [ $? = "0" ]; then
 
+        echo ''
         echo 'Creating a Service Principal on the App...'
-        azure ad sp create $createdAppId
+        azure ad sp create --applicationId $createdAppId
 
         if [ $? = "0" ]; then
 
+            echo ''
             echo 'Getting the Service Principal Object Id...'
 
             createdSpJson=$(azure ad sp show --spn $servicePrincipalIdUri --json)
             echo $createdSpJson
             createSpObjectId=$(echo $createdSpJson | jq --raw-output '.[0].objectId')
 
+            echo ''
             echo 'Assigning Subscription Read permissions to the Service Principal...'
 
             azure role assignment create --objectId $createSpObjectId \
