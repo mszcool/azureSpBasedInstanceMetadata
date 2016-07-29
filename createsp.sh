@@ -7,14 +7,14 @@
 # Parse the parameters
 subscriptionName=$1
 servicePrincipalName=$2
-servicePrincipalIdUri='http://$2'
+servicePrincipalIdUri='http://'$2
 servicePrincipalPwd=$3
 
 echo '----------------------------------------'
 echo 'Running with parameters:'
-echo 'subscription = $subscriptionName'
-echo 'servicePrincipalName = $servicePrincipalName'
-echo 'servicePrincipalIdUri = $servicePrincipalIdUri'
+echo 'subscription = ' $subscriptionName
+echo 'servicePrincipalName = ' $servicePrincipalName
+echo 'servicePrincipalIdUri = ' $servicePrincipalIdUri
 echo '----------------------------------------'
 
 
