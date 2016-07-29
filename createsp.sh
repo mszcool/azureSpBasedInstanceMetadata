@@ -26,7 +26,7 @@ echo 'Logging into Azure...'
 echo '----------------------------------------'
 
 azure config mode arm
-azure login
+#azure login
 
 echo ''
 echo '----------------------------------------'
@@ -54,39 +54,36 @@ azure ad app create --name "$servicePrincipalName" \
                     --identifier-uris "$servicePrincipalIdUri" \
                     --password $servicePrincipalPwd
 
-sleep 5
-
 if [ $? = "0" ]; then
 
     echo ''
     echo 'Getting the created appId...'
 
-    createdAppJson=$(azure ad app show --identifierUri $servicePrincipalIdUri --json)
+    createdAppJson=$(azure ad app show --identifierUri "$servicePrincipalIdUri" --json)
     echo $createdAppJson
-    createdAppId=$(echo $createdAppJson | jq --raw-output '.[0].appId')
+    createdAppId=$(echo $createdAppJson | jq --raw-output '.[0].objectId')
 
     if [ $? = "0" ]; then
 
         echo ''
         echo 'Creating a Service Principal on the App...'
-        azure ad sp create --applicationId $createdAppId
-        sleep 5
+        azure ad sp create --applicationId "$createdAppId"
 
         if [ $? = "0" ]; then
 
             echo ''
             echo 'Getting the Service Principal Object Id...'
 
-            createdSpJson=$(azure ad sp show --spn $servicePrincipalIdUri --json)
+            createdSpJson=$(azure ad sp show --spn "$servicePrincipalIdUri" --json)
             echo $createdSpJson
             createSpObjectId=$(echo $createdSpJson | jq --raw-output '.[0].objectId')
 
             echo ''
             echo 'Assigning Subscription Read permissions to the Service Principal...'
 
-            azure role assignment create --objectId $createSpObjectId \
+            azure role assignment create --objectId "$createSpObjectId" \
                                          --roleName Reader \
-                                         --subscription $subId 
+                                         --subscription "$subId" 
 
             echo ''
             echo '----------------------------------------'
