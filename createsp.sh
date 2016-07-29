@@ -57,7 +57,9 @@ if [ $? = "0" ]; then
     echo ''
     echo 'Getting the created appId...'
 
-    createdAppId=$(azure ad app show --identifierUri "$servicePrincipalIdUri" --json | jq --raw-output '.[0].appId')
+    createdAppJson=$(azure ad app show --identifierUri $servicePrincipalIdUri --json)
+    echo $createdAppJson
+    createdAppId=$(echo $createdAppJson | jq --raw-output '.[0].appId')
 
     if [ $? = "0" ]; then
 
@@ -68,7 +70,9 @@ if [ $? = "0" ]; then
 
             echo 'Getting the Service Principal Object Id...'
 
-            createSpObjectId=$(azure ad sp show --spn "$servicePrincipalIdUri" --json | jq --raw-output '.[0].objectId')
+            createdSpJson=$(azure ad sp show --spn "$servicePrincipalIdUri" --json)
+            echo $createdSpJson
+            createSpObjectId=$(echo $createdSpJson | jq --raw-output '.[0].objectId')
 
             echo 'Assigning Subscription Read permissions to the Service Principal...'
 
