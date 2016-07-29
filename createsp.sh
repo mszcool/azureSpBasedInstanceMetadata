@@ -37,6 +37,7 @@ subId=$(echo $accountsJson | jq --raw-output --arg pSubName $subscriptionName '.
 tenantId=$(echo $accountsJson | jq --raw-output --arg pSubName $subscriptionName '.[] | select(.name == $pSubName) | .tenantId')
 
 azure account set $subId
+
 echo 'Selected Subscription $subscriptionName with id=$subId and tenantId=$tenantId!'
 
 echo ''
@@ -45,6 +46,7 @@ echo 'Creating service principal'
 echo '----------------------------------------'
 
 echo 'Creating the app...'
+
 azure ad app create --name "$servicePrincipalName" \
                     --home-page "$servicePrincipalIdUri" \
                     --identifier-uris "$servicePrincipalIdUri" \
@@ -54,6 +56,7 @@ if [ $? = "0" ]; then
 
     echo ''
     echo 'Getting the created appId...'
+
     createdAppId=$(azure ad app show --identifierUri "$servicePrincipalIdUri" --json | jq --raw-output '.[0].appId')
 
     if [ $? = "0" ]; then
@@ -64,9 +67,11 @@ if [ $? = "0" ]; then
         if [ $? = "0" ]; then
 
             echo 'Getting the Service Principal Object Id...'
+
             createSpObjectId=$(azure ad sp show --spn "$servicePrincipalIdUri" --json | jq --raw-output '.[0].objectId')
 
             echo 'Assigning Subscription Read permissions to the Service Principal...'
+
             azure role assignment create --objectId $createSpObjectId \
                                          --roleName Reader \
                                          --subscription $subId 
@@ -77,18 +82,18 @@ if [ $? = "0" ]; then
             echo '----------------------------------------'
             echo ''
             echo 'Created the following App & Service Principal:'
-            echo 'App Name = $servicePrincipalName'
-            echo 'App ID URI = $servicePrincipalIdUri'
-            echo 'SP Object ID = $createSpObjectId'
-            echo 'SPN = $servicePrincipalIdUri'
+            echo 'App Name = '$servicePrincipalName
+            echo 'App ID URI = '$servicePrincipalIdUri
+            echo 'SP Object ID = '$createSpObjectId
+            echo 'SPN = '$servicePrincipalIdUri
             echo ''
             echo 'Update the following parameters in the armdeploy.parameters.json as follows:'
-            echo 'azureAdTenantId=$tenantId'
-            echo 'azureAdAppId=$createdAppId'
+            echo 'azureAdTenantId='$tenantId
+            echo 'azureAdAppId='$createdAppId
             echo 'azureAdAppSecret=<<the password you have passed in>>'
             echo ''
             echo 'You can test the service principal as follows:'
-            echo 'azure login --username $appId --service-principal --tenant $tenantId --password <<password passed in as parameter>>'
+            echo "azure login --username $appId --service-principal --tenant $tenantId --password <<password passed in as parameter>>"
             echo ''
 
         else 
