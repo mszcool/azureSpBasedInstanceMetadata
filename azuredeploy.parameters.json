@@ -1,0 +1,45 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccountName": {
+      "value": "uniqueStorageAccountName"
+    },
+    "adminUsername": {
+      "value": ""
+    },
+    "adminPassword": {
+      "value": ""
+    },
+    "azureAdTenantId": {
+      "value": ""
+    },
+    "azureAdAppId": {
+      "value": ""
+    },
+    "azureAdAppSecret": {
+      "value": ""
+    },
+    "dnsNameForPublicIP": {
+      "value": "uniqueDnsNameForPublicIP"
+    },
+    "location": {
+      "value": "West US"
+    },
+    "virtualNetworkName": {
+      "value": "myVNET"
+    },
+    "vmSize": {
+      "value": "Standard_A0"
+    },
+    "vmName": {
+      "value": "myVM"
+    },
+    "publicIPAddressName": {
+      "value": "myPublicIP"
+    },
+    "nicName": {
+      "value": "myNic"
+    }
+  }
+}
