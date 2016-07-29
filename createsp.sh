@@ -54,6 +54,8 @@ azure ad app create --name "$servicePrincipalName" \
                     --identifier-uris "$servicePrincipalIdUri" \
                     --password $servicePrincipalPwd
 
+sleep 5
+
 if [ $? = "0" ]; then
 
     echo ''
@@ -68,6 +70,7 @@ if [ $? = "0" ]; then
         echo ''
         echo 'Creating a Service Principal on the App...'
         azure ad sp create --applicationId $createdAppId
+        sleep 5
 
         if [ $? = "0" ]; then
 
