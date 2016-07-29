@@ -36,15 +36,15 @@ echo 'Creating service principal'
 echo '----------------------------------------'
 
 echo 'Creating the app...'
-azure ad app create --name $servicePrincipalName \
-                    --home-page $servicePrincipalIdUri \
-                    --identifier-uris $servicePrincipalIdUri \
+azure ad app create --name "$servicePrincipalName" \
+                    --home-page "$servicePrincipalIdUri" \
+                    --identifier-uris "$servicePrincipalIdUri" \
                     --password $servicePrincipalPwd
 
 if [ $? = "0" ]; then
 
     echo 'Getting the created appId...'
-    $createdAppId=$(azure ad app show --identifierUri $servicePrincipalIdUri --json | jq --raw-output '.[0].appId')
+    $createdAppId=$(azure ad app show --identifierUri "$servicePrincipalIdUri" --json | jq --raw-output '.[0].appId')
 
     if [ $? = "0"]; then
 
@@ -54,12 +54,12 @@ if [ $? = "0" ]; then
         if [ $? = "0" ]; then
 
             echo 'Getting the Service Principal Object Id...'
-            $createSpObjectId=$(azure ad sp show --spn http://marioszpTestServicePrincipalArm --json | jq --raw-output '.[0].objectId')
+            $createSpObjectId=$(azure ad sp show --spn "$servicePrincipalIdUri" --json | jq --raw-output '.[0].objectId')
 
             echo 'Assigning Subscription Read permissions to the Service Principal...'
             azure role assignment create --objectId $createSpObjectId \
-                                        --roleName Reader \
-                                        --subscription $subId 
+                                         --roleName Reader \
+                                         --subscription $subId 
 
             echo ''
             echo '----------------------------------------'
