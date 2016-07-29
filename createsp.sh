@@ -70,7 +70,7 @@ if [ $? = "0" ]; then
 
             echo 'Getting the Service Principal Object Id...'
 
-            createdSpJson=$(azure ad sp show --spn "$servicePrincipalIdUri" --json)
+            createdSpJson=$(azure ad sp show --spn $servicePrincipalIdUri --json)
             echo $createdSpJson
             createSpObjectId=$(echo $createdSpJson | jq --raw-output '.[0].objectId')
 
