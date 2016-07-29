@@ -36,9 +36,9 @@ echo 'Creating service principal'
 echo '----------------------------------------'
 
 echo 'Creating the app...'
-azure ad app create --name $servicePrincipalName ´
-                    --home-page $servicePrincipalIdUri ´
-                    --identifier-uris $servicePrincipalIdUri ´
+azure ad app create --name $servicePrincipalName \
+                    --home-page $servicePrincipalIdUri \
+                    --identifier-uris $servicePrincipalIdUri \
                     --password $servicePrincipalPwd
 
 if [ $? = "0" ]; then
@@ -57,8 +57,8 @@ if [ $? = "0" ]; then
             $createSpObjectId=$(azure ad sp show --spn http://marioszpTestServicePrincipalArm --json | jq --raw-output '.[0].objectId')
 
             echo 'Assigning Subscription Read permissions to the Service Principal...'
-            azure role assignment create --objectId $createSpObjectId ´
-                                        --roleName Reader ´
+            azure role assignment create --objectId $createSpObjectId \
+                                        --roleName Reader \
                                         --subscription $subId 
 
             echo ''
@@ -82,15 +82,24 @@ if [ $? = "0" ]; then
             echo ''
 
         else 
+
+            echo ''
+            echo 'ERROR'
             echo 'Failed creating the service principal on the app... cancelling service principal setup...'
+
         fi
 
     else
-        echo 'Failed creating the service principal - cancelling service principal setup...'
+
+            echo ''
+            echo 'ERROR'
+                    echo 'Failed creating the service principal - cancelling service principal setup...'
     fi
 
 else
 
+    echo ''
+    echo 'ERROR'
     echo 'Failed creating the app - cancelling service principal setup...'
 
 fi
