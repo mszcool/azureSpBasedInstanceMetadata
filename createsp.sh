@@ -9,6 +9,7 @@ subscriptionName=$1
 servicePrincipalName=$2
 servicePrincipalIdUri='http://'$2
 servicePrincipalPwd=$3
+skipLogin=$4
 
 echo ''
 echo '----------------------------------------'
@@ -24,14 +25,18 @@ echo ''
 echo '----------------------------------------'
 echo 'Logging into Azure...'
 echo '----------------------------------------'
+echo ''
 
 azure config mode arm
-#azure login
+if [[ -z $skipLogin ]]; then
+  azure login
+fi
 
 echo ''
 echo '----------------------------------------'
 echo 'Selecting Subscription / Account...'
 echo '----------------------------------------'
+echo ''
 
 accountsJson=$(azure account list --json)
 subId=$(echo $accountsJson | jq --raw-output --arg pSubName $subscriptionName '.[] | select(.name == $pSubName) | .id')
@@ -60,14 +65,16 @@ if [ $? = "0" ]; then
     echo ''
     echo 'Getting the created appId...'
 
+    sleep 10
     createdAppJson=$(azure ad app show --identifierUri "$servicePrincipalIdUri" --json)
-    echo $createdAppJson
-    createdAppId=$(echo $createdAppJson | jq --raw-output '.[0].objectId')
+    #echo $createdAppJson
+    createdAppId=$(echo $createdAppJson | jq --raw-output '.[0].appId')
 
     if [ $? = "0" ]; then
 
         echo ''
         echo 'Creating a Service Principal on the App...'
+        sleep 10
         azure ad sp create --applicationId "$createdAppId"
 
         if [ $? = "0" ]; then
@@ -76,12 +83,14 @@ if [ $? = "0" ]; then
             echo 'Getting the Service Principal Object Id...'
 
             createdSpJson=$(azure ad sp show --spn "$servicePrincipalIdUri" --json)
-            echo $createdSpJson
+            #echo $createdSpJson
             createSpObjectId=$(echo $createdSpJson | jq --raw-output '.[0].objectId')
+            #echo $createSpObjectId
 
             echo ''
             echo 'Assigning Subscription Read permissions to the Service Principal...'
 
+            sleep 10
             azure role assignment create --objectId "$createSpObjectId" \
                                          --roleName Reader \
                                          --subscription "$subId" 
