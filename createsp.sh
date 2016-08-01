@@ -65,16 +65,20 @@ if [ $? = "0" ]; then
     echo ''
     echo 'Getting the created appId...'
 
+    # Had to do a sleep to make sure previous operations were completed on the backend...
     sleep 10
+
     createdAppJson=$(azure ad app show --identifierUri "$servicePrincipalIdUri" --json)
-    #echo $createdAppJson
     createdAppId=$(echo $createdAppJson | jq --raw-output '.[0].appId')
 
     if [ $? = "0" ]; then
 
         echo ''
         echo 'Creating a Service Principal on the App...'
+        
+        # Had to do a sleep to make sure previous operations were completed on the backend...
         sleep 10
+
         azure ad sp create --applicationId "$createdAppId"
 
         if [ $? = "0" ]; then
@@ -82,10 +86,11 @@ if [ $? = "0" ]; then
             echo ''
             echo 'Getting the Service Principal Object Id...'
 
+            # Had to do a sleep to make sure previous operations were completed on the backend...
+            sleep 10
+
             createdSpJson=$(azure ad sp show --spn "$servicePrincipalIdUri" --json)
-            #echo $createdSpJson
             createSpObjectId=$(echo $createdSpJson | jq --raw-output '.[0].objectId')
-            #echo $createSpObjectId
 
             echo ''
             echo 'Assigning Subscription Read permissions to the Service Principal...'
