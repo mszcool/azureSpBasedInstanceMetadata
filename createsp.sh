@@ -52,6 +52,7 @@ echo 'Creating the app...'
 azure ad app create --name "$servicePrincipalName" \
                     --home-page "$servicePrincipalIdUri" \
                     --identifier-uris "$servicePrincipalIdUri" \
+                    --reply-urls "$servicePrincipalIdUri" \
                     --password $servicePrincipalPwd
 
 if [ $? = "0" ]; then
