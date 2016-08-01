@@ -91,13 +91,14 @@ if [ $? = "0" ]; then
             sleep 10
 
             createdSpJson=$(azure ad sp show --spn "$servicePrincipalIdUri" --json)
-            
+
             createSpObjectId=$(echo $createdSpJson | jq --raw-output '.[0].objectId')
 
             echo ''
             echo 'Assigning Subscription Read permissions to the Service Principal...'
 
             sleep 10
+            
             azure role assignment create --objectId "$createSpObjectId" \
                                          --roleName Reader \
                                          --subscription "$subId" 
