@@ -69,6 +69,7 @@ if [ $? = "0" ]; then
     sleep 10
 
     createdAppJson=$(azure ad app show --identifierUri "$servicePrincipalIdUri" --json)
+
     createdAppId=$(echo $createdAppJson | jq --raw-output '.[0].appId')
 
     if [ $? = "0" ]; then
@@ -90,6 +91,7 @@ if [ $? = "0" ]; then
             sleep 10
 
             createdSpJson=$(azure ad sp show --spn "$servicePrincipalIdUri" --json)
+            
             createSpObjectId=$(echo $createdSpJson | jq --raw-output '.[0].objectId')
 
             echo ''
