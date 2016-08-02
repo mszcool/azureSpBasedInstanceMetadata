@@ -3,28 +3,28 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "storageAccountName": {
-      "value": "uniqueStorageAccountName"
+      "value": "--storageaccountname--"
     },
     "adminUsername": {
-      "value": ""
+      "value": "--adminusername--"
     },
     "adminPassword": {
-      "value": ""
+      "value": "--password--"
     },
     "azureAdTenantId": {
-      "value": ""
+      "value": "--azuread-tenantid--"
     },
     "azureAdAppId": {
-      "value": ""
+      "value": "--azuread-appid--"
     },
     "azureAdAppSecret": {
-      "value": ""
+      "value": "--azuread-app-password--"
     },
     "dnsNameForPublicIP": {
-      "value": "uniqueDnsNameForPublicIP"
+      "value": "--publicdnsname--"
     },
     "location": {
-      "value": "West US"
+      "value": "--region--"
     },
     "virtualNetworkName": {
       "value": "myVNET"
@@ -33,7 +33,7 @@
       "value": "Standard_A0"
     },
     "vmName": {
-      "value": "myVM"
+      "value": "myVm"
     },
     "publicIPAddressName": {
       "value": "myPublicIP"
