@@ -40,14 +40,39 @@ azure group create --location "$location" "$resgroup"
 #
 # Create the storage account and get the keys for uploading the custom script
 #
+
+echo ''
+echo 'Creating storage account...'
 azure storage account create --location "$location" \
                              --resource-group "$resgroup" \
                              --sku-name "LRS" \
                              "$storageaccount"
 
+echo ''
+echo 'Getting Storage Account Keys...'
 storageKey=$(azure storage account keys list --resource-group "$resgroup" "$storageaccount" --json | jq --raw-output '.[0].value')
 
+echo ''
+echo 'Creating container and uploading custom script...'
+azure storage container create --account-name "$storageaccount" \
+                               --account-key "$storageKey" \
+                               --permission Blob \
+                               "customscript"
+
+azure storage blob upload --file "readmeta.sh" --blob "readmeta.sh" --container "customscript" \
+                          --account-name "$storageaccount" --account-key "$storageKey"
+
+#
+# Create the actual deployment
+#
+echo ''
+echo 'Starting deployment of VM...'
 azure group deployment create --resource-group "$resgroup" \
                               --name "$deploymentname" \
                               --template-file azuredeploy.json \
                               --parameters-file azuredeploy.real.parameters.json
+
+echo ''
+echo '--------------------------------------------------'
+echo 'Finished!!'
+echo '--------------------------------------------------'
