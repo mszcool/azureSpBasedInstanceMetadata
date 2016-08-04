@@ -21,6 +21,8 @@ fi
 #
 # Prepare an ARM parameters file
 #
+rm azuredeploy.real.parameters.json
+
 cat azuredeploy.parameters.json \
 | sed -e "s/--storageaccountname--/$storageaccount/" \
 | sed -e "s/--adminusername--/$adminuser/" \
@@ -30,7 +32,7 @@ cat azuredeploy.parameters.json \
 | sed -e "s/--azuread-app-password--/$aadAppSecret/" \
 | sed -e "s/--publicdnsname--/$publicdnsname/" \
 | sed -e "s/--region--/$location/" \
-| azuredeploy.real.parameters.json
+>> azuredeploy.real.parameters.json
 
 #
 # Create the resource group
@@ -46,6 +48,7 @@ echo 'Creating storage account...'
 azure storage account create --location "$location" \
                              --resource-group "$resgroup" \
                              --sku-name "LRS" \
+                             --kind "Storage" \
                              "$storageaccount"
 
 echo ''
@@ -59,7 +62,7 @@ azure storage container create --account-name "$storageaccount" \
                                --permission Blob \
                                "customscript"
 
-azure storage blob upload --file "readmeta.sh" --blob "readmeta.sh" --container "customscript" \
+azure storage blob upload --quiet --file "readmeta.sh" --blob "readmeta.sh" --container "customscript" \
                           --account-name "$storageaccount" --account-key "$storageKey"
 
 #

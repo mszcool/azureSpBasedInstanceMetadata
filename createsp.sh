@@ -28,7 +28,7 @@ echo '----------------------------------------'
 echo ''
 
 azure config mode arm
-if [[ -z $skipLogin ]]; then
+if [[ -z "$skipLogin" ]]; then
   azure login
 fi
 
