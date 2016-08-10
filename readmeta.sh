@@ -4,16 +4,20 @@
 # ~/vmmetadatalist.json, ~/vmmetadatadetails.json and ~/vnetmetadata.json
 # 
 
-sudo mkdir /home/script
-export HOME=/home/marioszp
+sudo mkdir /home/metadata
+export HOME=/home/metadata
 
 #
 # Install the pre-requisites using apt-get
 #
+
 sudo apt-get -y update
+sudo apt-get -y install build-essential
 sudo apt-get -y install jq
-sudo apt-get -y install nodejs-legacy
-sudo apt-get -y install npm
+
+curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+sudo apt-get -y install nodejs
+
 sudo npm install -g azure-cli
 
 #
@@ -54,14 +58,14 @@ echo $vmId
 # Now that we have the correct vmId, get the high-level details of the VM
 #
 vmJson=$(azure vm list --json | jq --arg pVmId "$vmId" 'map(select(.vmId == $pVmId))')
-echo $vmJson > /home/vmmetadatalist.json
+echo $vmJson > /home/metadata/vmmetadatalist.json
 echo "---- VM JSON ----"
 echo $vmJson
 
 vmResGroup=$(echo $vmJson | jq -r '.[0].resourceGroupName')
 vmName=$(echo $vmJson | jq -r '.[0].name')
 vmDetailedJson=$(azure vm show --json -n "$vmName" -g "$vmResGroup")
-echo $vmDetailedJson > /home/script/vmmetadatadetails.json
+echo $vmDetailedJson > /home/metadata/vmmetadatadetails.json
 echo "---- vm Detail JSON ---"
 echo $vmDetailedJson
 
@@ -70,7 +74,7 @@ echo $vmDetailedJson
 #
 vmNetworkResourceName=$(echo $vmJson | jq -r '.[0].networkProfile.networkInterfaces[0].id')
 netJson=$(azure network nic list -g $vmResGroup --json | jq --arg pVmNetResName "$vmNetworkResourceName" '.[] | select(.id == $pVmNetResName)')
-echo $netJson > /home/script/vmnetworkdetails.json
+echo $netJson > /home/metadata/vmnetworkdetails.json
 echo "---- Net JSON ----"
 echo $netJson
 
@@ -78,9 +82,9 @@ echo $netJson
 # Note: this can go on and on with any other kinds of resources...
 #
 netIpConfigsForVm=$(echo $netJson | jq '{ "ipCfgs": .ipConfigurations }')
-echo $netIpConfigsFromVm > /home/vmipconfigs.json
+echo $netIpConfigsForVm > /home/metadata/vmipconfigs.json
 netIpPublicResourceName=$(echo $netJson | jq -r '.ipConfigurations[0].publicIPAddress.id')
 netIpPublicJson=$(azure network public-ip list -g $vmResGroup  --json | jq --arg ipid $netIpPublicResourceName '.[] | select(.id == $ipid)')
-echo $netIpPublicJson > /home/script/vmipconfigspublicip.json
+echo $netIpPublicJson > /home/metadata/vmipconfigspublicip.json
 echo "---- Net Public IP JSON ----"
 echo $netIpPublicJson

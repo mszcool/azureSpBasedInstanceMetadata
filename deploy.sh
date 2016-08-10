@@ -7,11 +7,11 @@ adminuser=$6
 adminpassword=$7
 aadTenantId=$8
 aadAppId=$9
-aadAppSecret=$10
+aadAppSecret=${10}
 
 if [[ -z $resgroup ]] || [[ -z $location ]] || [[ -z $deploymentname ]] || \
    [[ -z $publicdnsname ]] || [[ -z $storageaccount ]] || [[ -z $adminuser ]] || \
-   [[ -z $adminpassword ]] || [[ -z $aadTenantId ]] || [[ -z $aadAppId ]] || [[ -z aadAppSecret ]]; then
+   [[ -z $adminpassword ]] || [[ -z $aadTenantId ]] || [[ -z $aadAppId ]] || [[ -z $aadAppSecret ]]; then
 
    echo 'Missing parameters'
    echo 'Usage: deploy.sh resourcegroupname azureregion deploymentname publicdnsname storageaccountname adminusername adminuserpassword aadTenantId aadAppId aadAppPassword'

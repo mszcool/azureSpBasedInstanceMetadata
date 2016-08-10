@@ -121,6 +121,7 @@ fi
 echo ''
 echo 'Assigning Subscription Read permissions to the Service Principal...'
 
+# Again the sleep to make sure the previous operations were completed on the backend...
 sleep 20
 
 # Finally perform the role assignment
