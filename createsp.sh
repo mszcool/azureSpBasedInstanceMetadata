@@ -152,5 +152,11 @@ echo ''
 echo 'You can test the service principal as follows:'
 echo "azure login --username $appId --service-principal --tenant $tenantId --password <<password passed in as parameter>>"
 echo ''
+echo 'You can also use the included deploy.sh script to start a deployment and test the metadata script right away:'
+echo "tenantId=\"$tenantId\""
+echo "appId=\"$createdAppId\""
+echo "appSecret=\"<<the password you have passed in>>\""
+echo "deploy.sh resourceGroupName \"your region\" deploymentName publicDnsName storageAccountName rootUserName rootPassword \$tenantId \$appId \$appSecret"
+echo '' 
 
 exit 0
