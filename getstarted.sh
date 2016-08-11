@@ -15,9 +15,11 @@ azure login
 echo '**** 1 ****'
 echo 'First we need to create the Service Principal:'
 echo '**** 1 ****'
+
 read -p "Subscription Name: " subscriptionName
 read -p "Service Principal Name: " servicePrincipalName
 read -p "Service Principal Password: " servicePrincipalPwd
+
 echo ''
 echo 'Launching Service Principal creation...'
 
@@ -27,13 +29,13 @@ echo ''
 echo '**** 2 ****'
 echo 'Now we create the actual VM and use it to read metadata from within the VM!'
 echo '**** 2 ****'
-read -p "" resGroupName
-read -p "" location
-read -p "" deploymentName
-read -p "" publicDnsName
-read -p "" storageAccountName
-read -p "" rootUserName
-read -p "" rootUserPwd
+read -p "Resource Group Name: " resGroupName
+read -p "Region: " location
+read -p "Deployment Name: " deploymentName
+read -p "Public DNS Name: " publicDnsName
+read -p "Storage Account Name: " storageAccountName
+read -p "Root User Name: " rootUserName
+read -p "Root User Password: " rootUserPwd
 
 accountsJson=$(azure account list --json)
 subId=$(echo $accountsJson | jq --raw-output --arg pSubName $subscriptionName '.[] | select(.name == $pSubName) | .id')
@@ -41,7 +43,7 @@ tenantId=$(echo $accountsJson | jq --raw-output --arg pSubName $subscriptionName
 
 appIdUri="http://$servicePrincipalName"
 appJson=$(azure ad app show --identifierUri "$appIdUri" --json)
-appId=$(cat $appJson | jq --raw-output '.[0].appId')
+appId=$(echo $appJson | jq --raw-output '.[0].appId')
 
 echo ''
 echo 'Launch VM Creation script...'
